@@ -12,24 +12,25 @@ import { LoginDto } from '../dto/login.dto';
 export class AuthService {
   constructor(
     @InjectModel(User.name)
-    private userModel: Model<User>,
+    private userModel: Model<User>,private jwtService: JwtService
   ) {}
 
   async signUp(signUpDto: SignUpDto) {
-    const { name, email, password } = signUpDto;
+    const { name, email, password, address } = signUpDto;
    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await this.userModel.create({
       name,
       email,
       password: hashedPassword,
+      address,
     });
 
     return { user };
   }
 
   async login(loginDto: LoginDto) {
-    const { email, password } = loginDto;
+    const { email, password, address } = loginDto;
 
     const user = await this.userModel.findOne({ email });
 
@@ -44,6 +45,8 @@ export class AuthService {
     }
     return { user };
   }
+
+
   async findAll() {
     return this.userModel.find()
       .exec();
