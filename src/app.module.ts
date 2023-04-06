@@ -4,9 +4,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './user/models/user.module';
+import { NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { CorsMiddleware } from './cors.middleware';
 
 @Module({
-  imports: [
+  imports: [  
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -16,4 +18,8 @@ import { AuthModule } from './user/models/user.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CorsMiddleware).forRoutes('*');
+  }
+}

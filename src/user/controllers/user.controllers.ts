@@ -18,4 +18,8 @@ export class AuthController {
     console.log("***** Login *****", loginDto)
     return this.authService.login(loginDto);
   }
+  @Get('/findAll')
+  findAll() {
+    return this.authService.findAll();
+  }
 }
