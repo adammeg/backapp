@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './user/models/user.module';
 import { NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { CorsMiddleware } from './cors.middleware';
+import { UrlModule } from './user/models/url.module';
 
 @Module({
   imports: [  
@@ -13,7 +14,8 @@ import { CorsMiddleware } from './cors.middleware';
       isGlobal: true,
     }),
     MongooseModule.forRoot("mongodb+srv://MCD:fondative@mcd.cbujrjd.mongodb.net/?retryWrites=true&w=majority"),
-    AuthModule,
+    AuthModule,UrlModule
+    
   ],
   controllers: [AppController],
   providers: [AppService],
