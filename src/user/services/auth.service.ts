@@ -25,6 +25,8 @@ export class AuthService {
       password: hashedPassword,
       address,
     });
+    const payload = { username: user.name, sub: user.email };
+    return ({ accessToken: this.jwtService.sign(payload) });
 
     return { user };
   }
@@ -43,7 +45,9 @@ export class AuthService {
     if (!isPasswordMatched) {
       throw new UnauthorizedException('Invalid email or password');
     }
-    return { user };
+    const payload = { username: user.name, sub: user.email };
+    return ({ accessToken: this.jwtService.sign(payload) });
+    
   }
 
 

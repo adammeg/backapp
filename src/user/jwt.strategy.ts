@@ -1,31 +1,18 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Model } from 'mongoose';
-import { Strategy, ExtractJwt } from 'passport-jwt';
-import { User } from './schema/User.schema';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    @InjectModel(User.name)
-    private userModel: Model<User>,
-  ) {
+  constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: "123546852",
-      algorithms: ['HS256'],
+      ignoreExpiration: false,
+      secretOrKey: 'your-secretkey',
     });
   }
 
-  async validate(payload: { id: any; }) {
-    const { id } = payload;
-
-    const user = await this.userModel.findById(id);
-
-    if (!user) {
-      throw new UnauthorizedException('Login first to access this endpoint.');
-    }
-    return user;
+  async validate(payload: any) {
+    return { userId: payload.sub, username: payload.username };
   }
 }
